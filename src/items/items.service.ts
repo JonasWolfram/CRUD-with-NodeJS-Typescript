@@ -34,3 +34,46 @@ let items: Items = {
 /**
  * Service Methods
  */
+// Gibt ganze Objekte wieder
+export const findAll = async (): Promise<Item[]> => Object.values(items);
+
+// find erhält eine ID als Parameter zu dem es nach genau einem Objekt sucht und es wiedergibt wenn es gefunden wird.
+export const find = async (id: number): Promise<Item> => items[id];
+
+// Erstellt neue Items
+export const create = async (newItem: BaseItem): Promise<Item> => {
+  const id = new Date().valueOf();
+
+  items[id] = {
+    id,
+    ...newItem,
+  };
+  return items[id];
+};
+
+// Update eines Items
+export const update = async (
+  id: number,
+  itemUpdate: BaseItem
+): Promise<Item | null> => {
+  const item = await find(id);
+
+  if (!item) {
+    return null;
+  }
+
+  items[id] = { id, ...itemUpdate };
+
+  return items[id];
+};
+
+// Ein Item löschen
+export const remove = async (id: number): Promise<null | void> => {
+  const item = await find(id);
+
+  if (!item) {
+    return null;
+  }
+
+  delete items[id];
+};
